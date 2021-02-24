@@ -1,13 +1,37 @@
 import React from 'react';
 import './Board.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import io from 'socket.io-client';
+
+const socket = io();
 
 export function BoardCreate() {
     const [myList, changeList] = useState(['','','','','','','','','']);
     
     function ButtonClicked(index) {
-        changeList(prevList => [...prevList, prevList[index] = 'x']);
+        const newList = [...myList];
+        console.log(newList)
+        newList[index] = "x";
+        changeList(newList);
+        console.log(newList)
+        socket.emit('board', {newList});
     }
+    
+    
+    
+ useEffect(() => {
+    // Listening for a chat event emitted by the server. If received, we
+    // run the code in the function that is passed in as the second arg
+    socket.on('board', (data) => {
+      console.log('Board event received!');
+      console.log(data);
+      console.log(myList)
+      // If the server sends a message (on behalf of another client), then we
+      // add it to the list of messages to render it on the UI.
+      changeList(myList => [...myList, data.message]);
+    });
+  }, []);
+    
     
     return <div className="board">
     <div onClick={() => ButtonClicked(0)} class="box"> {myList[0]} </div>

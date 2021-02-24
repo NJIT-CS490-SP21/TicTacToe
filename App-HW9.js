@@ -1,11 +1,21 @@
 import logo from './logo.svg';
 import './App.css';
-import { boardCreate } from './Board.js';
+import './Board.css';
+import { BoardCreate } from './Board.js';
+import { useState } from 'react';
+import { OnClickButton } from './Board.js';
 
 function App() {
+  
+
+  
   return (
-    <boardCreate/>
+    <div>
+
     
+    <BoardCreate />
+    
+    </div>
   );
 }
 

@@ -10,19 +10,25 @@ export function BoardCreate() {
     
     function ButtonClicked(index) {
         const newList = [...myList];
-        console.log(newList)
+
         newList[index] = "x";
+       
         changeList(newList);
-        console.log(newList)
         socket.emit('board', {newList});
+       
     }
     
-    
-    
- useEffect(() => {
+     useEffect(() => {
     // Listening for a chat event emitted by the server. If received, we
     // run the code in the function that is passed in as the second arg
     socket.on('board', (data) => {
+      // console.log('Board event received!');
+      
+      // // If the server sends a message (on behalf of another client), then we
+      // // add it to the list of messages to render it on the UI.
+      // const newList = [...myList];
+      // newList[data.index] = 'x';
+      // changeList(newList)
       console.log('Board event received!');
       console.log(data);
       console.log(myList)
@@ -30,8 +36,11 @@ export function BoardCreate() {
       // add it to the list of messages to render it on the UI.
       changeList(myList => [...myList, data.message]);
     });
-  }, []);
     
+  }, [myList]);
+    
+    
+
     
     return <div className="board">
     <div onClick={() => ButtonClicked(0)} class="box"> {myList[0]} </div>

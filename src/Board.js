@@ -1,59 +1,44 @@
 import React from 'react';
 import './Board.css';
-import { useState, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import io from 'socket.io-client';
 
 const socket = io();
 
-export function BoardCreate() {
-    const [myList, changeList] = useState(['','','','','','','','','']);
+export function Board(props) {
+    //console.log(props);
     
-    function ButtonClicked(index) {
-        const newList = [...myList];
-
-        newList[index] = "x";
-       
-        changeList(newList);
-        socket.emit('board', {newList});
-       
+    
+    
+    function onClickButton(test){
+        const newList = [...props.list];
+        if(newList[0] == 'false'){
+            newList[test] = 'x';
+            newList[0] = 'true';
+        }
+        else {
+           newList[test] = "o";
+           newList[0] = 'false';
+        }
+        //console.log(props.list);
+      // If the server send
+        props.changeList(newList);
+        //changeList(newList);
+        socket.emit('board', {message: newList});
     }
     
-     useEffect(() => {
-    // Listening for a chat event emitted by the server. If received, we
-    // run the code in the function that is passed in as the second arg
-    socket.on('board', (data) => {
-      // console.log('Board event received!');
-      
-      // // If the server sends a message (on behalf of another client), then we
-      // // add it to the list of messages to render it on the UI.
-      // const newList = [...myList];
-      // newList[data.index] = 'x';
-      // changeList(newList)
-      console.log('Board event received!');
-      console.log(data);
-      console.log(myList)
-      // If the server sends a message (on behalf of another client), then we
-      // add it to the list of messages to render it on the UI.
-      changeList(myList => [...myList, data.message]);
-    });
-    
-  }, [myList]);
-    
     
 
+    return <div class="board">
+  <div onClick={() => onClickButton(1)} class="box"> {props.list[1]} </div>
+  <div onClick={() => onClickButton(2)} class="box"> {props.list[2]} </div>
+  <div onClick={() => onClickButton(3)} class="box"> {props.list[3]} </div>
+  <div onClick={() => onClickButton(4)} class="box"> {props.list[4]} </div>
+  <div onClick={() => onClickButton(5)} class="box"> {props.list[5]} </div>
+  <div onClick={() => onClickButton(6)} class="box"> {props.list[6]} </div>
+  <div onClick={() => onClickButton(7)} class="box"> {props.list[7]} </div>
+  <div onClick={() => onClickButton(8)} class="box"> {props.list[8]} </div>
+  <div onClick={() => onClickButton(9)} class="box"> {props.list[9]} </div>
+</div>;
     
-    return <div className="board">
-    <div onClick={() => ButtonClicked(0)} class="box"> {myList[0]} </div>
-    <div onClick={() => ButtonClicked(1)} class="box"> {myList[1]} </div>
-    <div onClick={() => ButtonClicked(2)} class="box"> {myList[2]} </div>
-    <div onClick={() => ButtonClicked(3)} class="box"> {myList[3]} </div>
-    <div onClick={() => ButtonClicked(4)} class="box"> {myList[4]} </div>
-    <div onClick={() => ButtonClicked(5)} class="box"> {myList[5]} </div>
-    <div onClick={() => ButtonClicked(6)} class="box"> {myList[6]} </div>
-    <div onClick={() => ButtonClicked(7)} class="box"> {myList[7]} </div>
-    <div onClick={() => ButtonClicked(8)} class="box"> {myList[8]} </div>
-    </div>;
-    
-}
-
-
+    }

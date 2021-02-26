@@ -45,6 +45,7 @@ def on_disconnect():
 @socketio.on('board')
 def on_boardUpdate(data):
     print("Board updated!")
+    print(data)
     socketio.emit('board', data, broadcast=True,include_self=False)
 
 

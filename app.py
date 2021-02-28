@@ -1,23 +1,12 @@
 import os
-from flask import Flask, send_from_directory, json
+from flask import Flask, send_from_directory, json, session
 from flask_socketio import SocketIO
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__, static_folder='./build/static')
 
-# Point SQLAlchemy to your Heroku database
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
-# Gets rid of a warning
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db = SQLAlchemy(app)
-
-# IMPORTANT: This must be AFTER creating db variable to prevent
-# circular import issues
-# from models import Person
-
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
+
 socketio = SocketIO(
     app,
     cors_allowed_origins="*",
@@ -31,8 +20,9 @@ def index(filename):
     return send_from_directory('./build', filename)
 
 # When a client connects from this Socket connection, this function is run
-@socketio.on('connect')
-def on_connect():
+@socketio.on('connected')
+def on_connect(data):
+    socketio.emit('board',  data, broadcast=True, include_self=True)
     print('User connected!')
 
 # When a client disconnects from this Socket connection, this function is run
@@ -43,17 +33,15 @@ def on_disconnect():
 # When a client emits the event 'chat' to the server, this function is run
 # 'chat' is a custom event name that we just decided
 @socketio.on('board')
-def on_boardUpdate(data):
-    print("Board updated!")
-    print(data)
-    socketio.emit('board', data, broadcast=True,include_self=False)
+def on_chat(data): 
+    if (data['message'][10] ==  "0"):
+        socketio.emit('board',  data, broadcast=True, include_self=True)
 
-
+# Note that we don't call app.run anymore. We call socketio.run with app arg
 # Note we need to add this line so we can import app in the python shell
 if __name__ == "__main__":
-# Note that we don't call app.run anymore. We call socketio.run with app arg
     socketio.run(
         app,
         host=os.getenv('IP', '0.0.0.0'),
         port=8081 if os.getenv('C9_PORT') else int(os.getenv('PORT', 8081)),
-    )
+)

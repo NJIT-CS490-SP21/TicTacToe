@@ -2,16 +2,18 @@ import React from 'react';
 import './Board.css';
 import { useState, useRef, useEffect } from 'react';
 import io from 'socket.io-client';
-
+import { currentUser } from "./App.js"
 const socket = io();
 
 export function Board(props) {
-    //console.log(props);
+
     
     
     
     function onClickButton(test){
         const newList = [...props.list];
+    if(newList[12] == currentUser){
+        
         if(newList[0] == 'false'){
             newList[test] = 'x';
             newList[0] = 'true';
@@ -20,12 +22,25 @@ export function Board(props) {
            newList[test] = "o";
            newList[0] = 'false';
         }
-        //console.log(props.list);
-      // If the server send
+
         props.changeList(newList);
-        //changeList(newList);
+
+        
+        
+        if(newList[12] == newList[13]){
+            newList[12] = newList[14]
+        }
+        else{
+            newList[12] = newList[13]
+        }
         socket.emit('board', {message: newList});
+        
+
     }
+    
+        
+    }
+    
     
     
 
@@ -42,3 +57,5 @@ export function Board(props) {
 </div>;
     
     }
+   
+    

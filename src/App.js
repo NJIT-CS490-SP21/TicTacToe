@@ -1,59 +1,77 @@
 import logo from './logo.svg';
 import './App.css';
-import './Board.css';
-import { Board } from './Board.js';
 import { useState, useRef, useEffect } from 'react';
 import io from 'socket.io-client';
+import './Board.css';
+import { Board } from './Board.js';
+
 
 const socket = io(); // Connects to socket connection
 
-export var currentUser = '';
+export var userPlaying = '';
 
 function App() {
-  const [myList, changeList] = useState(['false','','','','','','','','','','0','0']);
+  const [box, changeBox] = useState(['false','','','','','','','','','','0','0']);
   useEffect(() => {
 
-    socket.on('board', (data) => {
-      console.log(data);
+    socket.on('board', (fromServer) => {
+   
  
-      changeList(data.message);
+      changeBox(fromServer.message);
       
     });
   }, []);
   
    useEffect(() => {
 
-    socket.on('board', (data) => {
-      console.log(data);
+    socket.on('board', (fromServer) => {
+  
 
-      changeList(data.message);
+      changeBox(fromServer.message);
       
     });
   }, []);
   
-  const mySubmitHandler = (event) => {
+  const mySubmitHandler = (gameStarted) => {
     
-    event.preventDefault();
-    var userin = document.getElementsByName('textbox')[0].value
-    currentUser = document.getElementsByName('textbox')[0].value
-    if (myList[13] == null){
-      //current player
-      myList[12] = currentUser
-      myList[11] = 1;
+    gameStarted.preventDefault();
+    var userInput = document.getElementsByName('textbox')[0].value
+    
+    userPlaying = document.getElementsByName('textbox')[0].value
+    
+    if (box[13] == null){
       
-      myList[13] = userin
-      socket.emit('connected', {message: myList});
-    }
-    else if (myList[14] == null){
-      myList[12] = currentUser
-      myList[11] = 2;
-      myList[14] = userin
-      socket.emit('connected', {message: myList});
-    }
-    else{
-    myList[11] = 1 + myList[11];
-    socket.emit('connected', {message: myList});
-    myList.push(userin)
+      box[13] = userInput
+      
+      
+      box[11] = 1;
+      
+      box[12] = userPlaying
+      
+      
+      
+ 
+      
+      socket.emit('board', {message: box});
+      
+    } else if (box[14] == null){
+      
+      box[11] = 2;
+      
+      
+      box[12] = userPlaying
+      
+      
+      box[14] = userInput
+      
+      socket.emit('board', {message: box});
+      
+    } else{
+    box[11] = 1 + box[11];
+    
+    socket.emit('board', {message: box});
+    
+    box.push(userInput)
       
     }
     
@@ -68,15 +86,15 @@ function App() {
   <div className="App">
   <div className="half">
 
-  {(myList[11] <= 0 || currentUser == '') ? (
+  {(box[11] <= 0 || userPlaying == '') ? (
     <span>  <form onSubmit={mySubmitHandler} >
-  <p>Name:</p>
+    <p>Name:</p>
     <input type="text" name="textbox" />
   
-  <input type="submit" value="Sign in" />
-  </form></span>
+    <input type="submit" value="Sign in" />
+    </form></span>
   ) : (
-    <span className="product-loggedin">{myList[11]} signed in<Board list={myList} changeList={changeList} />{currentUser}</span>
+    <span className="product-loggedin">Tic Tac Toe<Board box={box} changeBox={changeBox} />{userPlaying}</span>
   )}
   
 

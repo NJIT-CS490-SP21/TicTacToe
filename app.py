@@ -22,7 +22,6 @@ def index(filename):
 # When a client connects from this Socket connection, this function is run
 @socketio.on('connected')
 def on_connect(data):
-    socketio.emit('board',  data, broadcast=True, include_self=True)
     print('User connected!')
 
 # When a client disconnects from this Socket connection, this function is run

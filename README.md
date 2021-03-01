@@ -17,6 +17,7 @@
 1. Socketio when being used on heroku had a response time that was so slow I thought I messed up deploying it.
 2. There was an issue where the second players goes first but that can be debugged.
 
+
 ##Technical Issues
 1. Had a difficult time figuring out how to display the playerlist and how to calculate a winner/tie.
 2. There were some issues with the app.py not properly communicating with the App.js file.

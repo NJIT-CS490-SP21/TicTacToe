@@ -10,30 +10,34 @@ export function Board(props) {
     
     
     
-    function onBoxClick(test){
+    function onBoxClick(index){
         const newBoard = [...props.box];
-    if(newBoard[12] == userPlaying){
+        const players = [...props.users]
+    if(players[2] == userPlaying){
         
         if(newBoard[0] == 'true'){
-           newBoard[test] = "O";
+           newBoard[index] = "O";
            newBoard[0] = 'false';
         }
         else {
-            newBoard[test] = 'X';
+            newBoard[index] = 'X';
             newBoard[0] = 'true';
         }
 
         props.changeBox(newBoard);
-
         
         
-        if(newBoard[12] == newBoard[13]){
-            newBoard[12] = newBoard[14]
+        if(players[2] == players[3]){
+            players[2] = players[4]
         }
         else{
-            newBoard[12] = newBoard[13]
+            players[2] = players[3]
         }
+        
+        props.changeUser(players)
+        
         socket.emit('board', {message: newBoard});
+        socket.emit('user', {message: players})
         
 
     }
@@ -58,4 +62,3 @@ export function Board(props) {
     
     }
    
-    

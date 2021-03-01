@@ -11,26 +11,31 @@ const socket = io(); // Connects to socket connection
 export var userPlaying = '';
 
 function App() {
-  const [box, changeBox] = useState(['false','','','','','','','','','','0','0']);
-  useEffect(() => {
-
-    socket.on('board', (fromServer) => {
-   
- 
-      changeBox(fromServer.message);
-      
-    });
-  }, []);
+  const [box, changeBox] = useState(['false','','','','','','','','','']);
+  const [usersInside, loginUser] = useState(['0','0'])
   
    useEffect(() => {
 
     socket.on('board', (fromServer) => {
-  
-
-      changeBox(fromServer.message);
+      
+      changeBox(fromServer.message)
+      console.log(fromServer.message)
       
     });
   }, []);
+  
+  
+   useEffect(() => {
+
+    socket.on('user', (fromServer) => {
+      
+      loginUser(fromServer.message)
+     console.log(fromServer.message)
+      
+      
+    });
+  }, []);
+  
   
   const mySubmitHandler = (gameStarted) => {
     
@@ -39,39 +44,41 @@ function App() {
     
     userPlaying = document.getElementsByName('textbox')[0].value
     
-    if (box[13] == null){
+    if (usersInside[3] == null){
       
-      box[13] = userInput
-      
-      
-      box[11] = 1;
-      
-      box[12] = userPlaying
+      usersInside[3] = userInput
       
       
+      usersInside[1] = 1;
       
+      usersInside[2] = userPlaying
+      
+      
+      console.log(usersInside)
  
-      
+      socket.emit('user', {message: usersInside})
       socket.emit('board', {message: box});
       
-    } else if (box[14] == null){
+    } else if (usersInside[4] == null){
       
-      box[11] = 2;
-      
-      
-      box[12] = userPlaying
+      usersInside[1] = 2;
       
       
-      box[14] = userInput
+      usersInside[2] = userPlaying
+      console.log(usersInside)
       
-      socket.emit('board', {message: box});
+      usersInside[4] = userInput
+      
+      socket.emit('user', {message: usersInside})
+      socket.emit('board', {message: box});;
       
     } else{
-    box[11] = 1 + box[11];
+    usersInside[1] = 1 + usersInside[1];
+    console.log(usersInside)
+     socket.emit('user', {message: usersInside})
+     socket.emit('board', {message: box});;
     
-    socket.emit('board', {message: box});
-    
-    box.push(userInput)
+    usersInside.push(userInput)
       
     }
     
@@ -86,7 +93,7 @@ function App() {
   <div className="App">
   <div className="half">
 
-  {(box[11] <= 0 || userPlaying == '') ? (
+  {(usersInside[1] <= 0 || userPlaying == '') ? (
     <span>  <form onSubmit={mySubmitHandler} >
     <p>Name:</p>
     <input type="text" name="textbox" />
@@ -94,7 +101,7 @@ function App() {
     <input type="submit" value="Sign in" />
     </form></span>
   ) : (
-    <span className="product-loggedin">Tic Tac Toe<Board box={box} changeBox={changeBox} />{userPlaying}</span>
+    <span className="product-loggedin">Tic Tac Toe<Board users={usersInside} changeUser={loginUser} box={box} changeBox={changeBox} />{userPlaying}</span>
   )}
   
 

@@ -33,8 +33,11 @@ def on_disconnect():
 # 'chat' is a custom event name that we just decided
 @socketio.on('board')
 def on_chat(data): 
-    if (data['message'][10] ==  "0"):
-        socketio.emit('board',  data, broadcast=True, include_self=True)
+    socketio.emit('board',  data, broadcast=True, include_self=True)
+        
+@socketio.on('user')
+def on_user(data):
+    socketio.emit('user', data, broadcast=True,include_self=True)
 
 # Note that we don't call app.run anymore. We call socketio.run with app arg
 # Note we need to add this line so we can import app in the python shell

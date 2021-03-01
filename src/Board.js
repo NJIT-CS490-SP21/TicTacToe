@@ -4,6 +4,10 @@ import { userPlaying } from "./App.js"
 import io from 'socket.io-client';
 import { useState, useRef, useEffect } from 'react';
 const socket = io();
+const currentPlayer = 2;
+const firstPlayer = 3;
+const secondPlayer = 4;
+const currentMark = 0;
 
 export function Board(props) {
 
@@ -13,25 +17,25 @@ export function Board(props) {
     function onBoxClick(index){
         const newBoard = [...props.box];
         const players = [...props.users]
-    if(players[2] == userPlaying){
+    if(players[currentPlayer] == userPlaying){
         
-        if(newBoard[0] == 'true'){
+        if(newBoard[currentMark] == 'true'){
            newBoard[index] = "O";
-           newBoard[0] = 'false';
+           newBoard[currentMark] = 'false';
         }
         else {
             newBoard[index] = 'X';
-            newBoard[0] = 'true';
+            newBoard[currentMark] = 'true';
         }
 
         props.changeBox(newBoard);
         
         
-        if(players[2] == players[3]){
-            players[2] = players[4]
+        if(players[currentPlayer] == players[firstPlayer]){
+            players[currentPlayer] = players[secondPlayer]
         }
         else{
-            players[2] = players[3]
+            players[currentPlayer] = players[firstPlayer]
         }
         
         props.changeUser(players)

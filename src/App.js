@@ -6,9 +6,13 @@ import './Board.css';
 import { Board } from './Board.js';
 
 
-const socket = io(); // Connects to socket connection
+const socket = io(); 
 
 export var userPlaying = '';
+const currentPlayer = 2;
+const firstPlayer = 3;
+const secondPlayer = 4;
+const playerCount = 1;
 
 function App() {
   const [box, changeBox] = useState(['false','','','','','','','','','']);
@@ -44,14 +48,15 @@ function App() {
     
     userPlaying = document.getElementsByName('textbox')[0].value
     
-    if (usersInside[3] == null){
-      
-      usersInside[3] = userInput
+    if (usersInside[firstPlayer] == null){
       
       
-      usersInside[1] = 1;
+      usersInside[firstPlayer] = userInput
       
-      usersInside[2] = userPlaying
+      
+      usersInside[playerCount] = 1;
+      
+      usersInside[currentPlayer] = userPlaying
       
       
       console.log(usersInside)
@@ -59,21 +64,21 @@ function App() {
       socket.emit('user', {message: usersInside})
       socket.emit('board', {message: box});
       
-    } else if (usersInside[4] == null){
+    } else if (usersInside[secondPlayer] == null){
       
-      usersInside[1] = 2;
+      usersInside[playerCount] = currentPlayer;
       
       
-      usersInside[2] = userPlaying
+      usersInside[currentPlayer] = userPlaying
       console.log(usersInside)
       
-      usersInside[4] = userInput
+      usersInside[secondPlayer] = userInput
       
       socket.emit('user', {message: usersInside})
       socket.emit('board', {message: box});;
       
     } else{
-    usersInside[1] = 1 + usersInside[1];
+    usersInside[playerCount] = 1 + usersInside[playerCount];
     console.log(usersInside)
      socket.emit('user', {message: usersInside})
      socket.emit('board', {message: box});;

@@ -13,7 +13,6 @@
 3. Preview web page in browser '/'
 
 ## Known problems
-*Don't do the Heroku step for assignments, you only need to deploy for Project 2*
 1. Socketio when being used on heroku had a response time that was so slow I thought I messed up deploying it.
 2. There was an issue where the second players goes first but that can be debugged.
 

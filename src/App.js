@@ -4,7 +4,8 @@ import { useState, useRef, useEffect } from 'react';
 import io from 'socket.io-client';
 import './Board.css';
 import { Board } from './Board.js';
-
+import { Leaderboard } from './LeaderBoard.js'
+import { LeaderOpen } from './LeaderBoard.js'
 
 
 const socket = io(); 
@@ -19,6 +20,11 @@ function App() {
   const [box, changeBox] = useState(['false','','','','','','','','','']);
   const [usersInside, loginUser] = useState(['0','0'])
   const [leaderBoard, changeBoard] = useState([])
+  
+  function onClickLeaderBoard() {
+    LeaderOpen = 'true'
+    socket.emit('Leaderboard')
+  }
   
   //emit user to backened to save to DB
   function userJoined(userName) {
@@ -45,10 +51,10 @@ function App() {
     });
     
     
-    socket.on('leaderBoard', (fromServer) => {
+    socket.on('Leaderboard', (fromServer) => {
       
       
-      changeBoard(fromServer.players)
+     
       
       
     });
@@ -111,6 +117,10 @@ function App() {
 
   
   
+  if(LeaderOpen == 'true') {
+    return(<Leaderboard />)
+  }
+  
   
   return (
     
@@ -127,13 +137,14 @@ function App() {
   ) : (
       <div>
       <span className="product-loggedin">Tic Tac Toe<Board users={usersInside} changeUser={loginUser} box={box} changeBox={changeBox} />{userPlaying}</span>
-      
-      <h3>Leaderboard </h3>
-      
+      <Leaderboard />
       </div>
+      
+      
+      
   )}
 
-  
+
 
 </div>
   </div>
@@ -144,3 +155,8 @@ function App() {
 
 
 export default App;
+
+
+
+      // <h3> Leader Board </h3>
+      // <input onClick={() => onClickLeaderBoard()} type="submit" value="View Leaderboard" />

@@ -53,6 +53,12 @@ def on_userSignedIn(userName):
     db.session.add(newUser)
     db.session.commit()
     
+
+@socketio.on('Leaderboard')
+def on_LeaderboardOpen():
+    socketio.emit('Leaderboard', broadcast=True, include_self=True)
+    print("opening Leaderboard")
+    
     
 
 # When a client disconnects from this Socket connection, this function is run

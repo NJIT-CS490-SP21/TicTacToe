@@ -6,6 +6,7 @@ import './Board.css';
 import { Board } from './Board.js';
 
 
+
 const socket = io(); 
 
 export var userPlaying = '';
@@ -17,7 +18,15 @@ const playerCount = 1;
 function App() {
   const [box, changeBox] = useState(['false','','','','','','','','','']);
   const [usersInside, loginUser] = useState(['0','0'])
+  const [leaderBoard, changeBoard] = useState([])
   
+  //emit user to backened to save to DB
+  function userJoined(userName) {
+    if(userName != '') {
+      socket.emit("userSignedIn", {'userJoined': userName})
+    }
+  }
+
    useEffect(() => {
 
     socket.on('board', (fromServer) => {
@@ -26,26 +35,36 @@ function App() {
       console.log(fromServer.message)
       
     });
-  }, []);
-  
-  
-   useEffect(() => {
-
+    
+    
     socket.on('user', (fromServer) => {
-      
       loginUser(fromServer.message)
-     console.log(fromServer.message)
+      console.log(fromServer.message)
       
       
     });
+    
+    
+    socket.on('leaderBoard', (fromServer) => {
+      
+      
+      changeBoard(fromServer.players)
+      
+      
+    });
+    
+    
   }, []);
+  
+
   
   
   const mySubmitHandler = (gameStarted) => {
     
     gameStarted.preventDefault();
     var userInput = document.getElementsByName('textbox')[0].value
-    
+    //emit user to backened to save to DB
+    userJoined(userInput)
     userPlaying = document.getElementsByName('textbox')[0].value
     
     if (usersInside[firstPlayer] == null){
@@ -106,8 +125,14 @@ function App() {
     <input type="submit" value="Sign in" />
     </form></span>
   ) : (
-    <span className="product-loggedin">Tic Tac Toe<Board users={usersInside} changeUser={loginUser} box={box} changeBox={changeBox} />{userPlaying}</span>
+      <div>
+      <span className="product-loggedin">Tic Tac Toe<Board users={usersInside} changeUser={loginUser} box={box} changeBox={changeBox} />{userPlaying}</span>
+      
+      <h3>Leaderboard </h3>
+      
+      </div>
   )}
+
   
 
 </div>

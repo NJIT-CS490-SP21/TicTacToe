@@ -4,8 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import io from 'socket.io-client';
 import './Board.css';
 import { Board } from './Board.js';
-import { Leaderboard } from './LeaderBoard.js'
-import { LeaderOpen } from './LeaderBoard.js'
+
 
 
 const socket = io(); 
@@ -16,15 +15,22 @@ const firstPlayer = 3;
 const secondPlayer = 4;
 const playerCount = 1;
 
+
 function App() {
   const [box, changeBox] = useState(['false','','','','','','','','','']);
   const [usersInside, loginUser] = useState(['0','0'])
   const [leaderBoard, changeBoard] = useState([])
   
-  function onClickLeaderBoard() {
-    LeaderOpen = 'true'
-    socket.emit('Leaderboard')
-  }
+  
+  function ListItem(props){
+
+    return( <tr>
+        <td>{props.name[0]}</td>
+        <td>{props.name[1]}</td>
+        </tr>
+        );
+    }
+
   
   //emit user to backened to save to DB
   function userJoined(userName) {
@@ -38,24 +44,22 @@ function App() {
     socket.on('board', (fromServer) => {
       
       changeBox(fromServer.message)
-      console.log(fromServer.message)
+      // console.log(fromServer.message)
       
     });
     
     
     socket.on('user', (fromServer) => {
       loginUser(fromServer.message)
-      console.log(fromServer.message)
+      // console.log(fromServer.message)
       
       
     });
     
     
-    socket.on('Leaderboard', (fromServer) => {
-      
-      
-     
-      
+    socket.on('leaderBoard', (fromServer) => {
+        changeBoard(fromServer.players)
+        console.log(leaderBoard)
       
     });
     
@@ -84,7 +88,7 @@ function App() {
       usersInside[currentPlayer] = userPlaying
       
       
-      console.log(usersInside)
+      // console.log(usersInside)
  
       socket.emit('user', {message: usersInside})
       socket.emit('board', {message: box});
@@ -95,7 +99,7 @@ function App() {
       
       
       usersInside[currentPlayer] = userPlaying
-      console.log(usersInside)
+      // console.log(usersInside)
       
       usersInside[secondPlayer] = userInput
       
@@ -104,7 +108,7 @@ function App() {
       
     } else{
     usersInside[playerCount] = 1 + usersInside[playerCount];
-    console.log(usersInside)
+    // console.log(usersInside)
      socket.emit('user', {message: usersInside})
      socket.emit('board', {message: box});;
     
@@ -117,9 +121,7 @@ function App() {
 
   
   
-  if(LeaderOpen == 'true') {
-    return(<Leaderboard />)
-  }
+
   
   
   return (
@@ -137,16 +139,24 @@ function App() {
   ) : (
       <div>
       <span className="product-loggedin">Tic Tac Toe<Board users={usersInside} changeUser={loginUser} box={box} changeBox={changeBox} />{userPlaying}</span>
-      <Leaderboard />
+      
       </div>
       
       
       
   )}
-
-
-
-</div>
+  
+  <span className="product-loggedin">
+  <table>
+    <tr>
+      <th>Username</th>
+      <th>Score</th>
+    </tr>
+    
+    {leaderBoard.map((value ,index) => <ListItem key = {index} name = {value}/>)}
+  </table>
+</span>
+  </div>
   </div>
   );
   
@@ -158,5 +168,3 @@ export default App;
 
 
 
-      // <h3> Leader Board </h3>
-      // <input onClick={() => onClickLeaderBoard()} type="submit" value="View Leaderboard" />

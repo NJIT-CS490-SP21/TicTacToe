@@ -43,8 +43,14 @@ def on_connected():
     print('User connected!')
     all_players = models.Person.query.all()
     convertToArrayList = convertToArr(all_players)
-    socketio.emit("leaderBoard", {"players": convertToArrayList})
-    print(convertToArr(all_players))
+    arrayOfPlayer = []
+    for newPerson in convertToArrayList:
+        name = newPerson.username
+        score = newPerson.score
+        newArr = [name,score]
+        arrayOfPlayer.append(newArr)
+    socketio.emit("leaderBoard", {"players": arrayOfPlayer})
+    # print(convertToArr(all_players))
     
 @socketio.on('userSignedIn')
 def on_userSignedIn(userName):
@@ -52,12 +58,6 @@ def on_userSignedIn(userName):
     print(newUser)
     db.session.add(newUser)
     db.session.commit()
-    
-
-@socketio.on('Leaderboard')
-def on_LeaderboardOpen():
-    socketio.emit('Leaderboard', broadcast=True, include_self=True)
-    print("opening Leaderboard")
     
     
 

@@ -49,6 +49,9 @@ def makeTableFormat(query):
 #TODO - fix
 @socketio.on('game_over')
 def on_game_over(data):
+    '''
+    function to tell server how to handle game ending
+    '''
     if data['winner'] != "":
         winner = models.Person.query.filter_by(username=data['winner']).first()
         winner.score = winner.score + 1
@@ -61,6 +64,15 @@ def on_game_over(data):
         formattedData = makeTableFormat(converToArrayList)
         print(formattedData)
         socketio.emit("leaderBoard", {"players": formattedData})
+    # leaderboard_result = models.Person.query.order_by(
+    #     models.Person.score.desc()).limit(10)
+    # print(leaderboard_result)
+    # leaderboard_json = makeTableFormat(leaderboard_result)
+    # socketio.emit('leaderboard_info_update',
+    #               leaderboard_json,
+    #               broadcast=True,
+    #               include_self=True)
+    # socketio.emit('game_results', data, broadcast=True, include_self=True)
 
 @socketio.on('connect')
 def on_connected():

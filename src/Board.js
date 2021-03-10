@@ -9,6 +9,7 @@ const firstPlayer = 3;
 const secondPlayer = 4;
 const currentMark = 0;
 
+
 export function Board(props) {
 
     
@@ -17,39 +18,93 @@ export function Board(props) {
     function onBoxClick(index){
         const newBoard = [...props.box];
         const players = [...props.users]
+   
+            
+      //TODO - fix
+      function calculateWinner(squares) {
+        const lines = [
+          [0, 1, 2],
+          [3, 4, 5],
+          [6, 7, 8],
+          [0, 3, 6],
+          [1, 4, 7],
+          [2, 5, 8],
+          [0, 4, 8],
+          [2, 4, 6],
+        ];
+      
+        for (let i = 0; i < lines.length; i++) {
+          const [a, b, c] = lines[i];
+          console.log(squares);
+          if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+            return squares[a];
+          }
+        }
+      
+      return null;
+    }
+    
+        
+        
+        
+        
+        
     if(players[currentPlayer] == userPlaying){
         
-        if(newBoard[currentMark] == 'true'){
+        if(players[currentMark] == 'true'){
            newBoard[index] = "O";
-           newBoard[currentMark] = 'false';
+           players[currentMark] = 'false';
         }
         else {
             newBoard[index] = 'X';
-            newBoard[currentMark] = 'true';
+            players[currentMark] = 'true';
         }
 
         props.changeBox(newBoard);
         
         
         if(players[currentPlayer] == players[firstPlayer]){
-            players[currentPlayer] = players[secondPlayer]
+            players[currentPlayer] = players[secondPlayer];
         }
         else{
-            players[currentPlayer] = players[firstPlayer]
+            players[currentPlayer] = players[firstPlayer];
         }
         
-        props.changeUser(players)
+        props.changeUser(players);
+        
+    //TODO - fix
+      let winner_status = calculateWinner(newBoard); //alert instead of log
+      console.log(winner_status);
+      if(winner_status)
+      {
+        if(winner_status === "X")
+        {
+          console.log("Player 2 won");
+          socket.emit('game_over', {winner: players[secondPlayer], loser: players[firstPlayer]});
+
+        }
+        else if(winner_status === "O") {
+          console.log("Player 1 won");
+          socket.emit('game_over', {winner: players[firstPlayer], loser: players[secondPlayer]});
+         
+        }
+      }
+        
+        
+        
+        
         
         socket.emit('board', {message: newBoard});
-        socket.emit('user', {message: players})
+        socket.emit('user', {message: players});
         
 
-    }
-    
+        }
         
     }
     
+
     
+
     
 
     return <div class="board">

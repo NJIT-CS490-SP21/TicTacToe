@@ -17,9 +17,9 @@ const playerCount = 1;
 
 
 function App() {
-  const [box, changeBox] = useState(['false','','','','','','','','','']);
-  const [usersInside, loginUser] = useState(['0','0'])
-  const [leaderBoard, changeBoard] = useState([])
+  const [box, changeBox] = useState(Array(9).fill(null));
+  const [usersInside, loginUser] = useState(['false','0']);
+  const [leaderBoard, changeBoard] = useState([]);
   
   
   function ListItem(props){
@@ -35,7 +35,7 @@ function App() {
   //emit user to backened to save to DB
   function userJoined(userName) {
     if(userName != '') {
-      socket.emit("userSignedIn", {'userJoined': userName})
+      socket.emit("userSignedIn", {'userJoined': userName});
     }
   }
 
@@ -43,14 +43,14 @@ function App() {
 
     socket.on('board', (fromServer) => {
       
-      changeBox(fromServer.message)
+      changeBox(fromServer.message);
       // console.log(fromServer.message)
       
     });
     
     
     socket.on('user', (fromServer) => {
-      loginUser(fromServer.message)
+      loginUser(fromServer.message);
       // console.log(fromServer.message)
       
       
@@ -58,8 +58,8 @@ function App() {
     
     
     socket.on('leaderBoard', (fromServer) => {
-        changeBoard(fromServer.players)
-        console.log(leaderBoard)
+        changeBoard(fromServer.players);
+        console.log(leaderBoard);
       
     });
     
@@ -72,25 +72,25 @@ function App() {
   const mySubmitHandler = (gameStarted) => {
     
     gameStarted.preventDefault();
-    var userInput = document.getElementsByName('textbox')[0].value
+    var userInput = document.getElementsByName('textbox')[0].value;
     //emit user to backened to save to DB
-    userJoined(userInput)
-    userPlaying = document.getElementsByName('textbox')[0].value
+    userJoined(userInput);
+    userPlaying = document.getElementsByName('textbox')[0].value;
     
     if (usersInside[firstPlayer] == null){
       
       
-      usersInside[firstPlayer] = userInput
+      usersInside[firstPlayer] = userInput;
       
       
       usersInside[playerCount] = 1;
       
-      usersInside[currentPlayer] = userPlaying
+      usersInside[currentPlayer] = userPlaying;
       
       
       // console.log(usersInside)
  
-      socket.emit('user', {message: usersInside})
+      socket.emit('user', {message: usersInside});
       socket.emit('board', {message: box});
       
     } else if (usersInside[secondPlayer] == null){
@@ -98,26 +98,25 @@ function App() {
       usersInside[playerCount] = currentPlayer;
       
       
-      usersInside[currentPlayer] = userPlaying
+      usersInside[currentPlayer] = userPlaying;
       // console.log(usersInside)
       
-      usersInside[secondPlayer] = userInput
+      usersInside[secondPlayer] = userInput;
       
-      socket.emit('user', {message: usersInside})
-      socket.emit('board', {message: box});;
+      socket.emit('user', {message: usersInside});
+      socket.emit('board', {message: box});
       
     } else{
     usersInside[playerCount] = 1 + usersInside[playerCount];
     // console.log(usersInside)
-     socket.emit('user', {message: usersInside})
-     socket.emit('board', {message: box});;
+     socket.emit('user', {message: usersInside});
+     socket.emit('board', {message: box});
     
-    usersInside.push(userInput)
+    usersInside.push(userInput);
       
     }
     
-  }
-  
+  };
 
   
   

@@ -48,7 +48,7 @@ def makeTableFormat(query):
     return arrayOfPlayer;
 
 #TODO - fix
-@socketio.on('game_over')
+@socketio.on('gameFinished')
 def on_finished_game(data):
     winner = data['winner']
     loser = data['loser']

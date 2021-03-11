@@ -17,10 +17,10 @@ export function Board(props) {
     
     function onBoxClick(index){
         const newBoard = [...props.box];
-        const players = [...props.users]
+        const players = [...props.users];
    
             
-      //TODO - fix
+      
       function calculateWinner(squares) {
         const lines = [
           [0, 1, 2],
@@ -73,21 +73,21 @@ export function Board(props) {
         props.changeUser(players);
         
     //TODO - fix
-      let winner_status = calculateWinner(newBoard); //alert instead of log
-      console.log(winner_status);
-      if(winner_status)
+      let gameStatus = calculateWinner(newBoard); 
+      console.log(gameStatus);
+      if(gameStatus)
       {
-        if(winner_status === "X")
+        if(gameStatus === "X")
         {
           console.log("Player 2 won");
           alert(players[secondPlayer] + " won!")
-          socket.emit('game_over', {winner: players[secondPlayer], loser: players[firstPlayer]});
+          socket.emit('gameFinished', {winner: players[secondPlayer], loser: players[firstPlayer]});
 
         }
-        else if(winner_status === "O") {
+        else if(gameStatus === "O") {
           console.log("Player 1 won");
           alert(players[firstPlayer] + " won!")
-          socket.emit('game_over', {winner: players[firstPlayer], loser: players[secondPlayer]});
+          socket.emit('gameFinished', {winner: players[firstPlayer], loser: players[secondPlayer]});
          
         }
       }

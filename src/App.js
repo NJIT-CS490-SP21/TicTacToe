@@ -17,9 +17,10 @@ const playerCount = 1;
 
 
 function App() {
-  const [box, changeBox] = useState(Array(9).fill(null));
+  const [box, changeBox] = useState([ '', '', '', '', '', '', '', '', '']);
   const [usersInside, loginUser] = useState(['false','0']);
   const [leaderBoard, changeBoard] = useState([]);
+  const [emptyList, changeEmptyList] = useState([ '', '', '', '', '', '', '', '', '']);
   
   
   function ListItem(props){
@@ -59,7 +60,6 @@ function App() {
     
     socket.on('leaderBoard', (fromServer) => {
         changeBoard(fromServer.players);
-        console.log(leaderBoard);
       
     });
     
@@ -117,6 +117,12 @@ function App() {
     }
     
   };
+  
+  function resetBoard() {
+    changeBox(emptyList);
+    socket.emit('board', {message: emptyList});
+    
+  }
 
   
   
@@ -138,8 +144,12 @@ function App() {
   ) : (
       <div>
       <span className="product-loggedin">Tic Tac Toe<Board users={usersInside} changeUser={loginUser} box={box} changeBox={changeBox} />{userPlaying}</span>
-      
+        <div>
+       <input onClick={() => resetBoard()} type="submit" value="Reset" />
       </div>
+      </div>  
+      
+
       
       
       
@@ -154,6 +164,7 @@ function App() {
     
     {leaderBoard.map((value ,index) => <ListItem key = {index} name = {value}/>)}
   </table>
+  
 </span>
   </div>
   </div>

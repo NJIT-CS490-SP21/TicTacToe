@@ -14,8 +14,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 db = SQLAlchemy(app)
 
 import models
+listOfAllPlayers = []
 
-db.create_all()
+
 
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 socketio = SocketIO(
@@ -50,12 +51,14 @@ def makeTableFormat(query):
 @socketio.on('game_over')
 def on_game_over(data):
     if data['winner'] != "":
-        winner = models.Person.query.filter_by(username=data['winner']).first()
-        winner.score = winner.score + 1
+        winner = data['winner']
+        loser = data['loser']
+        db.session.query(models.Person).filter(models.Person.username==winner).update({models.Person.score:models.Person.score +1})
         db.session.commit()
-        loser = models.Person.query.filter_by(username=data['loser']).first()
-        loser.score = loser.score - 1
+        print(winner)
+        db.session.query(models.Person).filter(models.Person.username==loser).update({models.Person.score:models.Person.score -1})
         db.session.commit()
+        print(loser)
         newleaderBoard = models.Person.query.order_by(models.Person.score.desc())
         converToArrayList = convertToArr(newleaderBoard)
         formattedData = makeTableFormat(converToArrayList)
@@ -65,7 +68,7 @@ def on_game_over(data):
 @socketio.on('connect')
 def on_connected():
     print('User connected!')
-    all_players = models.Person.query.all()
+    all_players = models.Person.query.order_by(models.Person.score.desc())
     convertToArrayList = convertToArr(all_players)
     formattedData = makeTableFormat(convertToArrayList)
     socketio.emit("leaderBoard", {"players": formattedData})
@@ -73,10 +76,14 @@ def on_connected():
     
 @socketio.on('userSignedIn')
 def on_userSignedIn(userName):
-    newUser = models.Person(username=userName['userJoined'], score=100)
-    print(newUser)
-    db.session.add(newUser)
-    db.session.commit()
+    getUserName=userName['userJoined']
+    if getUserName not in listOfAllPlayers:
+        newUser = models.Person(username=getUserName, score=100)
+        print(newUser)
+        db.session.add(newUser)
+        db.session.commit()
+        listOfAllPlayers.append(getUserName)
+    
     
     
 

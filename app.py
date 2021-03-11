@@ -49,21 +49,20 @@ def makeTableFormat(query):
 
 #TODO - fix
 @socketio.on('game_over')
-def on_game_over(data):
-    if data['winner'] != "":
-        winner = data['winner']
-        loser = data['loser']
-        db.session.query(models.Person).filter(models.Person.username==winner).update({models.Person.score:models.Person.score +1})
-        db.session.commit()
-        print(winner)
-        db.session.query(models.Person).filter(models.Person.username==loser).update({models.Person.score:models.Person.score -1})
-        db.session.commit()
-        print(loser)
-        newleaderBoard = models.Person.query.order_by(models.Person.score.desc())
-        converToArrayList = convertToArr(newleaderBoard)
-        formattedData = makeTableFormat(converToArrayList)
-        print(formattedData)
-        socketio.emit("leaderBoard", {"players": formattedData})
+def on_finished_game(data):
+    winner = data['winner']
+    loser = data['loser']
+    db.session.query(models.Person).filter(models.Person.username==winner).update({models.Person.score:models.Person.score +1})
+    db.session.commit()
+    print(winner)
+    db.session.query(models.Person).filter(models.Person.username==loser).update({models.Person.score:models.Person.score -1})
+    db.session.commit()
+    print(loser)
+    newleaderBoard = models.Person.query.order_by(models.Person.score.desc())
+    converToArrayList = convertToArr(newleaderBoard)
+    formattedData = makeTableFormat(converToArrayList)
+    print(formattedData)
+    socketio.emit("leaderBoard", {"players": formattedData})
 
 @socketio.on('connect')
 def on_connected():

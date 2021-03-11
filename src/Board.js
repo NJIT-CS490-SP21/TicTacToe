@@ -80,11 +80,13 @@ export function Board(props) {
         if(winner_status === "X")
         {
           console.log("Player 2 won");
+          alert(players[secondPlayer] + " won!")
           socket.emit('game_over', {winner: players[secondPlayer], loser: players[firstPlayer]});
 
         }
         else if(winner_status === "O") {
           console.log("Player 1 won");
+          alert(players[firstPlayer] + " won!")
           socket.emit('game_over', {winner: players[firstPlayer], loser: players[secondPlayer]});
          
         }
@@ -108,6 +110,7 @@ export function Board(props) {
     
 
     return <div class="board">
+  <div onClick={() => onBoxClick(0)} class="box"> {props.box[0]} </div>
   <div onClick={() => onBoxClick(1)} class="box"> {props.box[1]} </div>
   <div onClick={() => onBoxClick(2)} class="box"> {props.box[2]} </div>
   <div onClick={() => onBoxClick(3)} class="box"> {props.box[3]} </div>
@@ -116,7 +119,6 @@ export function Board(props) {
   <div onClick={() => onBoxClick(6)} class="box"> {props.box[6]} </div>
   <div onClick={() => onBoxClick(7)} class="box"> {props.box[7]} </div>
   <div onClick={() => onBoxClick(8)} class="box"> {props.box[8]} </div>
-  <div onClick={() => onBoxClick(9)} class="box"> {props.box[9]} </div>
 </div>;
     
     }

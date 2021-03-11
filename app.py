@@ -63,6 +63,7 @@ def on_finished_game(data):
     formattedData = makeTableFormat(converToArrayList)
     print(formattedData)
     socketio.emit("leaderBoard", {"players": formattedData})
+    
 
 @socketio.on('connect')
 def on_connected():

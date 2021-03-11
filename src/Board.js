@@ -72,7 +72,7 @@ export function Board(props) {
         
         props.changeUser(players);
         
-    //TODO - fix
+    
       let gameStatus = calculateWinner(newBoard); 
       console.log(gameStatus);
       if(gameStatus)

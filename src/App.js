@@ -1,6 +1,5 @@
-import logo from "./logo.svg";
 import "./App.css";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import io from "socket.io-client";
 import "./Board.css";
 import { Board } from "./Board.js";
@@ -17,7 +16,7 @@ function App() {
   const [box, changeBox] = useState(["", "", "", "", "", "", "", "", ""]);
   const [usersInside, loginUser] = useState(["false", "0"]);
   const [leaderBoard, changeBoard] = useState([]);
-  const [emptyList, changeEmptyList] = useState([
+  const [emptyList] = useState([
     "",
     "",
     "",
@@ -40,7 +39,7 @@ function App() {
 
   //emit user to backened to save to DB
   function userJoined(userName) {
-    if (userName != "") {
+    if (userName !== "") {
       socket.emit("userSignedIn", { userJoined: userName });
     }
   }
@@ -107,7 +106,7 @@ function App() {
   return (
     <div className="App">
       <div className="half">
-        {usersInside[1] <= 0 || userPlaying == "" ? (
+        {usersInside[1] <= 0 || userPlaying === "" ? (
           <span>
             {" "}
             <form onSubmit={mySubmitHandler}>

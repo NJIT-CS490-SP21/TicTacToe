@@ -2,7 +2,6 @@ import React from "react";
 import "./Board.css";
 import { userPlaying } from "./App.js";
 import io from "socket.io-client";
-import { useState, useRef, useEffect } from "react";
 const socket = io();
 const currentPlayer = 2;
 const firstPlayer = 3;
@@ -41,8 +40,8 @@ export function Board(props) {
       return null;
     }
 
-    if (players[currentPlayer] == userPlaying) {
-      if (players[currentMark] == "true") {
+    if (players[currentPlayer] === userPlaying) {
+      if (players[currentMark] === "true") {
         newBoard[index] = "O";
         players[currentMark] = "false";
       } else {
@@ -52,7 +51,7 @@ export function Board(props) {
 
       props.changeBox(newBoard);
 
-      if (players[currentPlayer] == players[firstPlayer]) {
+      if (players[currentPlayer] === players[firstPlayer]) {
         players[currentPlayer] = players[secondPlayer];
       } else {
         players[currentPlayer] = players[firstPlayer];

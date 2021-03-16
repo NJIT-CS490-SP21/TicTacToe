@@ -15,6 +15,7 @@ db = SQLAlchemy(app)
 
 import models
 listOfAllPlayers = []
+print(os.getenv('DATABASE_URL'))
 
 
 

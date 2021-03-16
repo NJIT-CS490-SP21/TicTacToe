@@ -13,12 +13,12 @@
 //         userSignIn(userText);
 //         socket.emit("signIn", {userSignIn: userText})
 //     }
-    
-//     return<div> 
+
+//     return<div>
 //     <p>Username</p>
 //     <input ref={inputRef} type="username"/>
 //     <button onClick={onClickSignin}> Sign in</button>
-    
+
 //     </div>;
-    
+
 // }

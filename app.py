@@ -18,7 +18,6 @@ listOfAllPlayers = []
 print(os.getenv('DATABASE_URL'))
 
 
-
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 socketio = SocketIO(
     app,

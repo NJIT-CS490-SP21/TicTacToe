@@ -11,6 +11,7 @@ class Person(db.Model):
         return '<Person %r>' % self.username
         
     
+    
     @property
     def toFormat(self):
         return{

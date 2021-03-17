@@ -1,5 +1,8 @@
+"""
+Server side logic for tic tac toe game
+"""
 import os
-from flask import Flask, send_from_directory, json, session
+from flask import Flask, send_from_directory, json
 from flask_socketio import SocketIO
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -27,6 +30,9 @@ socketio = SocketIO(app,
 @app.route('/', defaults={"filename": "index.html"})
 @app.route('/<path:filename>')
 def index(filename):
+    """
+    getting index
+    """
     return send_from_directory('./build', filename)
 
 
@@ -34,10 +40,16 @@ def index(filename):
 
 
 def convertToArr(query):
+    """
+    converting the query result to an array
+    """
     return [item.toFormat for item in query]
 
 
 def makeTableFormat(query):
+    """
+    converting the query into a table to be displayed
+    """
     arrayOfPlayer = []
     for newPerson in query:
         name = newPerson["username"]
@@ -50,6 +62,9 @@ def makeTableFormat(query):
 
 @socketio.on('gameFinished')
 def on_finished_game(data):
+    """
+    function to handle when game ends
+    """
     winner = data['winner']
     loser = data['loser']
     db.session.query(
@@ -71,6 +86,9 @@ def on_finished_game(data):
 
 @socketio.on('connect')
 def on_connected():
+    """
+    handle when user connects to server
+    """
     print('User connected!')
     all_players = models.Person.query.order_by(models.Person.score.desc())
     convertToArrayList = convertToArr(all_players)
@@ -81,6 +99,9 @@ def on_connected():
 
 @socketio.on('userSignedIn')
 def on_userSignedIn(userName):
+    """
+    handle when user signs in
+    """
     getUserName = userName['userJoined']
     if getUserName not in listOfAllPlayers:
         newUser = models.Person(username=getUserName, score=100)
@@ -93,6 +114,9 @@ def on_userSignedIn(userName):
 # When a client disconnects from this Socket connection, this function is run
 @socketio.on('disconnect')
 def on_disconnect():
+    """
+    handles when user disconnects
+    """
     print('User disconnected!')
 
 
@@ -100,11 +124,17 @@ def on_disconnect():
 # 'chat' is a custom event name that we just decided
 @socketio.on('board')
 def on_chat(data):
+    """
+    updates board
+    """
     socketio.emit('board', data, broadcast=True, include_self=True)
 
 
 @socketio.on('user')
 def on_user(data):
+    """
+    sending user data to client
+    """
     socketio.emit('user', data, broadcast=True, include_self=True)
 
 

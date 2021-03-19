@@ -130,6 +130,7 @@ def on_chat(data):
     socketio.emit('board', data, broadcast=True, include_self=True)
 
 
+
 @socketio.on('user')
 def on_user(data):
     """

@@ -12,7 +12,7 @@ load_dotenv(find_dotenv())
 
 app = Flask(__name__, static_folder='./build/static')
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('HEROKU_POSTGRESQL_ONYX_URL')
 db = SQLAlchemy(app)
 
 import models

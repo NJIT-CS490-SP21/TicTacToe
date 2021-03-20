@@ -131,10 +131,8 @@ function App() {
             <div>
               <input onClick={() => resetBoard()} type="submit" value="Reset" />
             </div>
-          </div>
-        )}
-
-        <span className="product-loggedin">
+            
+          <span className="product-loggedin">
           <table>
             <tr>
               <th>Username</th>
@@ -145,7 +143,12 @@ function App() {
               <ListItem key={index} name={value} />
             ))}
           </table>
-        </span>
+          </span>
+            
+          </div>
+        )}
+
+
       </div>
     </div>
   );

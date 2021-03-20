@@ -1,8 +1,15 @@
-import { render, screen } from "@testing-library/react";
+import {render,screen,fireEvent,queryByAttribute,} from "@testing-library/react";
 import App from "./App";
 
-test("renders learn react link", () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+test("Login still there for blank username", () => {
+  const result = render(<App />);
+
+  const submitButton = screen.getByText("Sign in");
+
+  expect(submitButton).toBeInTheDocument();
+  fireEvent.click(submitButton);
+  expect(submitButton).toBeInTheDocument();
+  
+  
+  
 });

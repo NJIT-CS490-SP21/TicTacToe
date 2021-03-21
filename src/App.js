@@ -111,9 +111,9 @@ function App() {
             {" "}
             <form onSubmit={mySubmitHandler}>
               <p>Name:</p>
-              <input type="text" name="textbox" />
+              <input type="text" placeholder="Enter username" name="textbox" />
 
-              <input type="submit" value="Sign in" />
+              <input id="signInForm" type="submit" value="Sign in" />
             </form>
           </span>
         ) : (
